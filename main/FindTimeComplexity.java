@@ -1,5 +1,12 @@
 package main;
 
+/**
+ * This program is used to approximate the time complexity of a method.
+ * 
+ * @author Erik Dackander
+ *
+ */
+
 public class FindTimeComplexity {
 
 	private int[] array;
@@ -10,7 +17,7 @@ public class FindTimeComplexity {
 	 */
 	public FindTimeComplexity() {
 		this.array = new int[2];
-		this.time = new long[2 * 2];
+		this.time = new long[array.length * 2];
 
 		initiateArrays(array.length);
 	}
@@ -19,7 +26,7 @@ public class FindTimeComplexity {
 	 * instantiating the arrays that is used when testing the methods.
 	 */
 	private void initiateArrays(int size) {
-		int n = 1280;
+		int n = 40000;
 		int j = 1;
 		for (int i = 0; i < size; i++) {
 			array[i] = n / j;
@@ -32,7 +39,7 @@ public class FindTimeComplexity {
 		time[1] = keepTime(array[0]);
 		time[2] = keepTime(array[1]);
 		time[3] = keepTime(array[1]);
-		
+
 		double t1 = (double) time[2] / time[0];
 		double t2 = (double) time[2] / time[0];
 		double arrayDifference = (double) array[1] / array[0];
@@ -65,11 +72,19 @@ public class FindTimeComplexity {
 		return estimatedTime;
 	}
 
+	/*
+	 * The method to be tested.
+	 */
 	private void test(long n) {
-		for (int i = 0; i < n * n * n; i++)
+		for (int i = 0; i < n * n; i++)
 			;
 	}
 
+	/**
+	 * main-method. Creates a object of the program and then runs it. 
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		new FindTimeComplexity().runTests();
 	}
