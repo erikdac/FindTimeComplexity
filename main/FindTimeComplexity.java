@@ -6,7 +6,6 @@ package main;
  * @author Erik Dackander
  *
  */
-
 public class FindTimeComplexity {
 
 	private int[] array;
@@ -26,7 +25,7 @@ public class FindTimeComplexity {
 	 * instantiating the arrays that is used when testing the methods.
 	 */
 	private void initiateArrays(int size) {
-		int n = 40000;
+		int n = 44000;
 		int j = 1;
 		for (int i = 0; i < size; i++) {
 			array[i] = n / j;
@@ -41,7 +40,7 @@ public class FindTimeComplexity {
 		time[3] = keepTime(array[1]);
 
 		double t1 = (double) time[2] / time[0];
-		double t2 = (double) time[2] / time[0];
+		double t2 = (double) time[3] / time[1];
 		double arrayDifference = (double) array[1] / array[0];
 		double q1 = (double) arrayDifference / t1;
 		double q2 = (double) arrayDifference / t2;
@@ -76,7 +75,7 @@ public class FindTimeComplexity {
 	 * The method to be tested.
 	 */
 	private void test(long n) {
-		for (int i = 0; i < n * n; i++)
+		for (int i = 0; i < n*n; i++)
 			;
 	}
 
