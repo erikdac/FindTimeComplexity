@@ -4,21 +4,29 @@ package main;
  * This program is used to approximate the time complexity of a method.
  * 
  * @author Erik Dackander
- *
+ * 
  */
 public class FindTimeComplexity {
 
+	private int SIZE = 7; // Must be equally divided be two.
 	private int[] array;
-	private long[] time;
+	private int[] time;
 
 	/*
 	 * Constructor.
 	 */
 	public FindTimeComplexity() {
-		this.array = new int[2];
-		this.time = new long[array.length * 2];
+		this.array = new int[SIZE];
+		this.time = new int[SIZE * 2];
 
-		initiateArrays(array.length);
+		initiateArrays(SIZE);
+	}
+
+	private boolean isCorrectSize() {
+		if (SIZE % 2 == 0)
+			return true;
+		else
+			return false;
 	}
 
 	/*
@@ -33,18 +41,29 @@ public class FindTimeComplexity {
 		}
 	}
 
-	private void runTests() {
-		time[0] = keepTime(array[0]);
-		time[1] = keepTime(array[0]);
-		time[2] = keepTime(array[1]);
-		time[3] = keepTime(array[1]);
+	private void start() {
+		runTests(array, time);
 
-		double t1 = (double) time[2] / time[0];
-		double t2 = (double) time[3] / time[1];
-		double arrayDifference = (double) array[1] / array[0];
-		double q1 = (double) arrayDifference / t1;
-		double q2 = (double) arrayDifference / t2;
-		double quote = (double) (q1 + q2) / 2;
+		// Calculates the quote between times.
+		double[] t = new double[time.length / 2];
+		for (int i = 0; i < t.length; i++)
+			t[i] = (double) time[i + 2] / time[i];
+
+		// Calculates the quote between arrays.
+		double[] a = new double[array.length / 2];
+		for (int i = 0; i < a.length; i++)
+			a[i] = (double) array[i + 1] / array[i];
+
+		// Calculates the quotes.
+		double[] q = new double[array.length];
+		for (int i = 0; i < q.length; i++)
+			q[i] = a[i / 2] / t[i];
+
+		// Calculates the average quote.
+		double sum = 0;
+		for (int i = 0; i < q.length; i++)
+			sum += (double) q[i];
+		double quote = (double) sum / q.length;
 
 		System.out.println("QUOTE: " + quote);
 
@@ -62,12 +81,22 @@ public class FindTimeComplexity {
 	}
 
 	/*
+	 * The method that runs all the tests and collects the times it has taken
+	 * for each test to be run.
+	 */
+	private void runTests(int[] array, int[] time) {
+		for (int i = 0; i < time.length; i++) {
+			time[i] = keepTime(array[i / 2]);
+		}
+	}
+
+	/*
 	 * Takes the time for how long it takes to run the method.
 	 */
-	private long keepTime(int n) {
-		long startTime = System.currentTimeMillis();
+	private int keepTime(int n) {
+		int startTime = (int) System.currentTimeMillis();
 		test(n);
-		long estimatedTime = System.currentTimeMillis() - startTime;
+		int estimatedTime = (int) (System.currentTimeMillis() - startTime);
 		return estimatedTime;
 	}
 
@@ -75,16 +104,22 @@ public class FindTimeComplexity {
 	 * The method to be tested.
 	 */
 	private void test(long n) {
-		for (int i = 0; i < n*n; i++)
+		for (int i = 0; i < n * n; i++)
 			;
 	}
 
 	/**
-	 * main-method. Creates a object of the program and then runs it. 
+	 * main-method. Creates a object of the program and then runs it and checks
+	 * that its size-value is correct. If the size-value is correct it will run
+	 * the program.
 	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new FindTimeComplexity().runTests();
+		FindTimeComplexity program = new FindTimeComplexity();
+		if (program.isCorrectSize())
+			program.start();
+		else
+			System.err.println("Size must be equally divided my two. ");
 	}
 }
