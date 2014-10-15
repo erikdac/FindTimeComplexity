@@ -8,20 +8,25 @@ package main;
  */
 public class FindTimeComplexity {
 
-	private int SIZE = 7; // Must be equally divided be two.
+	private int SIZE = 2; // Must be equally divided be two.
 	private int[] array;
-	private int[] time;
+	private long[] time;
 
 	/*
 	 * Constructor.
 	 */
 	public FindTimeComplexity() {
+		
 		this.array = new int[SIZE];
-		this.time = new int[SIZE * 2];
+		this.time = new long[SIZE * 2];
 
 		initiateArrays(SIZE);
 	}
 
+	/*
+	 * Returns whether the SIZE-variable has a correct value or not. The value
+	 * needs to be equally divided by two.
+	 */
 	private boolean isCorrectSize() {
 		if (SIZE % 2 == 0)
 			return true;
@@ -33,7 +38,7 @@ public class FindTimeComplexity {
 	 * instantiating the arrays that is used when testing the methods.
 	 */
 	private void initiateArrays(int size) {
-		int n = 44000;
+		int n = 210;
 		int j = 1;
 		for (int i = 0; i < size; i++) {
 			array[i] = n / j;
@@ -47,27 +52,19 @@ public class FindTimeComplexity {
 		// Calculates the quote between times.
 		double[] t = new double[time.length / 2];
 		for (int i = 0; i < t.length; i++)
-			t[i] = (double) time[i + 2] / time[i];
+			t[i] = (double) time[i] / time[i + 2];
 
-		// Calculates the quote between arrays.
-		double[] a = new double[array.length / 2];
-		for (int i = 0; i < a.length; i++)
-			a[i] = (double) array[i + 1] / array[i];
+		int[] quote = new int[time.length/2];
+		for(int i = 0; i < quote.length; i++) {
+			quote[i] = Math.getExponent(t[0]);
+			int tmp = (int) Math.pow(t[i], quote[i]);
+			int tmp2 = Math.getExponent(t[i] - tmp);
+			if(tmp2 == 1) {
+				quote[i]++;
+			}
+		}
 
-		// Calculates the quotes.
-		double[] q = new double[array.length];
-		for (int i = 0; i < q.length; i++)
-			q[i] = a[i / 2] / t[i];
-
-		// Calculates the average quote.
-		double sum = 0;
-		for (int i = 0; i < q.length; i++)
-			sum += (double) q[i];
-		double quote = (double) sum / q.length;
-
-		System.out.println("QUOTE: " + quote);
-
-		int p = (int) (quote + 0.5);
+		int p = Math.getExponent(t[0]);
 		switch (p) {
 		case 0:
 			System.out.println("O(1)");
@@ -84,7 +81,7 @@ public class FindTimeComplexity {
 	 * The method that runs all the tests and collects the times it has taken
 	 * for each test to be run.
 	 */
-	private void runTests(int[] array, int[] time) {
+	private void runTests(int[] array, long[] time) {
 		for (int i = 0; i < time.length; i++) {
 			time[i] = keepTime(array[i / 2]);
 		}
@@ -93,18 +90,19 @@ public class FindTimeComplexity {
 	/*
 	 * Takes the time for how long it takes to run the method.
 	 */
-	private int keepTime(int n) {
-		int startTime = (int) System.currentTimeMillis();
+	private long keepTime(int n) {
+		long startTime = System.nanoTime();
 		test(n);
-		int estimatedTime = (int) (System.currentTimeMillis() - startTime);
-		return estimatedTime;
+		long endTime = System.nanoTime();
+		long runTime = endTime - startTime;
+		return runTime;
 	}
 
 	/*
 	 * The method to be tested.
 	 */
 	private void test(long n) {
-		for (int i = 0; i < n * n; i++)
+		for (int i = 0; i < n * n*n*n; i++)
 			;
 	}
 
