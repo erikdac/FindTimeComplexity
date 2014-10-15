@@ -8,7 +8,8 @@ package main;
  */
 public class FindTimeComplexity {
 
-	private int SIZE = 2; // Must be equally divided be two.
+	private final int SIZE = 4; // Must be equally divided be two.
+	private final int arraySize = 44000;
 	private int[] array;
 	private long[] time;
 
@@ -16,7 +17,7 @@ public class FindTimeComplexity {
 	 * Constructor.
 	 */
 	public FindTimeComplexity() {
-		
+
 		this.array = new int[SIZE];
 		this.time = new long[SIZE * 2];
 
@@ -38,10 +39,9 @@ public class FindTimeComplexity {
 	 * instantiating the arrays that is used when testing the methods.
 	 */
 	private void initiateArrays(int size) {
-		int n = 210;
 		int j = 1;
 		for (int i = 0; i < size; i++) {
-			array[i] = n / j;
+			array[i] = arraySize / j;
 			j *= 2;
 		}
 	}
@@ -54,14 +54,14 @@ public class FindTimeComplexity {
 		for (int i = 0; i < t.length; i++)
 			t[i] = (double) time[i] / time[i + 2];
 
-		int[] quote = new int[time.length/2];
-		for(int i = 0; i < quote.length; i++) {
+		int[] quote = new int[time.length / 2];
+		for (int i = 0; i < quote.length; i++) {
 			quote[i] = Math.getExponent(t[0]);
-			int tmp = (int) Math.pow(t[i], quote[i]);
-			int tmp2 = Math.getExponent(t[i] - tmp);
-			if(tmp2 == 1) {
+			int timeWithNewQuote = (int) Math.pow(t[i], quote[i]);
+			int quoteOfDifference = Math.getExponent(t[i] - timeWithNewQuote);
+
+			if (quoteOfDifference > 0)
 				quote[i]++;
-			}
 		}
 
 		int p = Math.getExponent(t[0]);
@@ -71,6 +71,9 @@ public class FindTimeComplexity {
 			break;
 		case 1:
 			System.out.println("O(n)");
+			break;
+		case arraySize:
+			System.out.println("O(n^n)");
 			break;
 		default:
 			System.out.println("O(n^" + p + ")");
@@ -102,7 +105,7 @@ public class FindTimeComplexity {
 	 * The method to be tested.
 	 */
 	private void test(long n) {
-		for (int i = 0; i < n * n*n*n; i++)
+		for (int i = 0; i < n*n; i++)
 			;
 	}
 
