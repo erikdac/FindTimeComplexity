@@ -8,7 +8,7 @@ package main;
  */
 public class FindTimeComplexity {
 
-	private int arraySize = 1288;
+	private int arraySize = 1170;
 	private int[] array;
 	private long[] time;
 
@@ -17,41 +17,66 @@ public class FindTimeComplexity {
 	 */
 	public FindTimeComplexity() {
 		this.array = new int[2];
-		this.time = new long[array.length * 2];
+		array = initiateArrays(array);
 
-		initiateArrays();
+		this.time = new long[array.length * 2];
 	}
 
 	/*
 	 * Instantiating the arrays that is used when testing the methods.
 	 */
-	private void initiateArrays() {
-		array[0] = arraySize/2;
+	private int[] initiateArrays(int[] array) {
+		array[0] = arraySize / 2;
 		array[1] = arraySize;
+		return array;
 	}
 
 	private void start() {
-		runTests(array, time);
+		long[] times = runTests(array, time);
+		double quote = averageQuote(times);
+		int p = getExponent(quote);
+		printTimeComplexity(p);
+	}
 
-		// Calculates the quote between times.
-		double[] t = new double[time.length / 2];
-		for (int i = 0; i < t.length; i++)
-			t[i] = (double) time[i + 2] / time[i];
+	/*
+	 * Calculates the average quote between the times.
+	 */
+	private double averageQuote(long[] time) {
+		double quote = 0;
+		int len = time.length / 2;
+		for (int i = 0; i < len; i++)
+			quote += (double) time[i + 2] / time[i];
 
-		double sum = 0;
-		for (int i = 0; i < t.length; i++) {
-			sum += t[i];
-		}
-		sum /= t.length;
+		quote /= len;
+		return quote;
+	}
 
-		int p = Math.getExponent(sum);
-		int testP = Math.getExponent(sum * 1.5);
+	/**
+	 * Calculates the correct exponent.
+	 * 
+	 * @param quote
+	 * @return The exponent.
+	 */
+	private int getExponent(double quote) {
+		int p = Math.getExponent(quote);
+		int testP = Math.getExponent(quote * 1.5);
 		if (testP > p)
 			p++;
 
+		return p;
+	}
+
+	/**
+	 * Prints out the time-complexity that the tested method has. Uses
+	 * ordo-notation.
+	 * 
+	 * @param p
+	 *            The exponent.
+	 */
+	private void printTimeComplexity(int p) {
 		switch (p) {
 		case 0:
-			System.out.println("O(1)");			// DOES NOT WORK
+			System.out.println("O(1)");
 			break;
 		case 1:
 			System.out.println("O(n)");
@@ -65,15 +90,22 @@ public class FindTimeComplexity {
 	 * The method that runs all the tests and collects the times it has taken
 	 * for each test to be run.
 	 */
-	private void runTests(int[] array, long[] time) {
+	private long[] runTests(int[] array, long[] time) {
 		for (int i = time.length - 1; i >= 0; i--) {
 			time[i] = keepTime(array[i / 2]);
-			if (time[i] < Math.pow(10, 7)) {
+			if (time[i] < Math.pow(10, 8)) {
 				arraySize *= 1.1;
-				initiateArrays();
-				i = time.length;
+				array = initiateArrays(array);
+				if (arraySize > Math.pow(10, 9)) {
+					i = 0;
+					for (int j = 0; j < time.length; j++)
+						time[j] = 1;
+
+				} else
+					i = time.length;
 			}
 		}
+		return time;
 	}
 
 	/*
@@ -91,7 +123,7 @@ public class FindTimeComplexity {
 	 * The method to be tested.
 	 */
 	private void test(long n) {
-		for (int i = 0; i < n*n; i++)
+		for (int i = 0; i < n * n * n; i++)
 			;
 	}
 
